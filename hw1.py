@@ -1,6 +1,5 @@
 import argparse
-
-sample_in = './sample_in.txt'
+import numpy as np
 
 def read_testcase(sample_in):
     test_cases = open(sample_in, 'r')
@@ -13,11 +12,22 @@ def read_testcase(sample_in):
 def lu_decompose():
     pass
 
+def lse(data_points, lamb):
+    # print (f'Processing LSE with data points: {data_points} and lambda {lamb}')
+
+    A = list()
+    for x, y in data_points:
+        row = list()
+        for i in range(lamb-1, -1, -1):
+            row.append(float(x)**i)
+        A.append(row)
+    print (A)
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", type=str, help="Path of testcase")
     parser.add_argument("-n", "--base", type=int, help="polynomial bases of predicted regression")
-    parser.add_argument("-l", "--lambda", type=int, help="lambda of LSE")
+    parser.add_argument("-l", "--lamb", type=int, help="lambda of LSE")
     args = parser.parse_args()
 
     return args
@@ -25,6 +35,7 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
     data_points = read_testcase(args.path)
-    print (data_points)
+
+    lse(data_points, args.lamb)
 
     
