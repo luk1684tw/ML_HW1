@@ -6,10 +6,26 @@ class Matrix():
         self.rows = len(data)
         self.cols = len(data[0])
         return
-    
+
+    def add(self, data):
+        ans = list()
+        for i in range(self.rows):
+            ans.append([a + b for a, b in zip(self.data[i], data.data[i])])
+
+        return Matrix(ans)
+
     def mul(self, data):
         operand = data.reverse().data
-        for 
+        ans = list()
+        for i in range(self.rows):
+            cur_row = list()
+            for j in range(data.cols):
+                cur_row.append(sum([a*b for a, b in zip(self.data[i], operand[j])]))
+            print (cur_row)
+            ans.append(cur_row)
+
+        return Matrix(ans)
+
     def reverse(self):
         res = [[0 for j in range(self.rows)] for i in range(self.cols)]
         for i in range(self.cols):
@@ -18,7 +34,7 @@ class Matrix():
 
         return Matrix(res)
 
-    def inverser(self):
+    def inverse(self):
         pass
 
 def read_testcase(sample_in):
@@ -30,12 +46,8 @@ def read_testcase(sample_in):
     
     return data_points
 
-def lu_decompose():
-    pass
-
 def lse(data_points, base, lamb):
     # print (f'Processing LSE with data points: {data_points} and lambda {lamb}')
-
     A = list()
     for x, y in data_points:
         row = list()
@@ -44,8 +56,9 @@ def lse(data_points, base, lamb):
         A.append(row)
 
     A = Matrix(A)
+    identity = Matrix([[lamb if i == j else 0 for j in range(A.rows)] for i in range(A.rows)])
+    A = A.reverse().mul(A).add(identity)
     return
-
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -61,6 +74,6 @@ if __name__ == "__main__":
     data_points = read_testcase(args.path)
 
     lse(data_points, args.base, args.lamb)
-    test = Matrix([[1, 3, 5], [2, 4, 6]])
-    print (test.reverse().data)
-    
+    op1 = Matrix([[1,2,3,4]])
+    op2 = Matrix([[5,6,7,8]])
+    print (op1.add(op2).data)
