@@ -21,7 +21,6 @@ class Matrix():
             cur_row = list()
             for j in range(data.cols):
                 cur_row.append(sum([a*b for a, b in zip(self.data[i], operand[j])]))
-            print (cur_row)
             ans.append(cur_row)
 
         return Matrix(ans)
@@ -35,7 +34,20 @@ class Matrix():
         return Matrix(res)
 
     def inverse(self):
-        pass
+        L, U = make_identity(self.rows, 1), self.data[:]
+        for i in range(self.rows-1):
+            for j in range(i+1, self.rows):
+                factor = U[i][j] / U[i][i]
+                L.data[j][i] = factor
+                U[j] = [j - factor*i for i, j in zip(U[i], U[j])]
+                print (U[j])
+        # print (L.data, U)
+
+        return
+                
+def make_identity(n, lamb):
+    return Matrix([[lamb if i == j else 0 for j in range(n)] for i in range(n)])
+
 
 def read_testcase(sample_in):
     test_cases = open(sample_in, 'r')
@@ -56,8 +68,9 @@ def lse(data_points, base, lamb):
         A.append(row)
 
     A = Matrix(A)
-    identity = Matrix([[lamb if i == j else 0 for j in range(A.rows)] for i in range(A.rows)])
+    identity = make_identity(A.cols, lamb)
     A = A.reverse().mul(A).add(identity)
+
     return
 
 def get_args():
@@ -74,6 +87,5 @@ if __name__ == "__main__":
     data_points = read_testcase(args.path)
 
     lse(data_points, args.base, args.lamb)
-    op1 = Matrix([[1,2,3,4]])
-    op2 = Matrix([[5,6,7,8]])
-    print (op1.add(op2).data)
+    op1 = Matrix([[-1, 2, -1], [1, -4, 6] ,[-2, 6, -6]])
+    op1.inverse()
