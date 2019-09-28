@@ -1,6 +1,9 @@
 import argparse
+import matplotlib.pyplot as plot
+import numpy as np
 
 from data_structures import Matrix
+from data_structures import Polynomial
 
 
 def read_testcase(sample_in):
@@ -11,6 +14,27 @@ def read_testcase(sample_in):
         data_points.append(data_array)
     
     return data_points
+
+def plot_figure(data_points, solution):
+    data_x, data_y = list(), list()
+    for data_point in data_points:
+        data_x.append(float(data_point[0]))
+        data_y.append(float(data_point[1]))
+    
+    plot.scatter(data_x, data_y, c='r')
+    
+    sol = list()
+    for i, coef in enumerate(reversed(solution)):
+        sol.append((i, coef[0]))
+
+    sol = Polynomial(sol)
+    sample_x = np.linspace(min(data_x), max(data_x), 50)
+    sample_y = sol(sample_x)
+
+    plot.plot(sample_x, sample_y)
+    plot.savefig('lse_plot.png')
+    return
+
 
 def lse(data_points, base, lamb):
     # print (f'Processing LSE with data points: {data_points} and lambda {lamb}')
@@ -47,4 +71,7 @@ if __name__ == "__main__":
     data_points = read_testcase(args.path)
 
     ans = lse(data_points, args.base, args.lamb)
+    # ans = 
+    plot_figure(data_points, ans)
     print (ans)
+

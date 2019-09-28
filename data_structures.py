@@ -69,3 +69,18 @@ class Matrix():
     @staticmethod
     def make_identity(n, lamb):
         return Matrix([[lamb if i == j else 0 for j in range(n)] for i in range(n)])
+
+
+class Polynomial():
+    '''
+    coefs example: 5x^4 + 2x^2 - x^1 + 8 => [(4, 5), (2, 2), (1, -1), (0, 8) (degree, coef)]
+    '''
+    def __init__(self, poly):
+        self.polynomial = poly
+    
+    def __call__(self, x):
+        y = 0
+        for deg, coef in self.polynomial:
+            y += coef * x ** deg
+
+        return y
