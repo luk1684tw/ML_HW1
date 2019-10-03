@@ -15,7 +15,7 @@ def read_testcase(sample_in):
     
     return data_points
 
-def plot_figure(data_points, solution):
+def plot_figure(data_points, solution, method):
     data_x, data_y = list(), list()
     for data_point in data_points:
         data_x.append(float(data_point[0]))
@@ -32,7 +32,8 @@ def plot_figure(data_points, solution):
     sample_y = sol(sample_x)
 
     plot.plot(sample_x, sample_y)
-    plot.savefig('lse_plot.png')
+    plot.savefig(f'{method}_plot.png')
+
     return
 
 
@@ -71,7 +72,6 @@ if __name__ == "__main__":
     data_points = read_testcase(args.path)
 
     ans = lse(data_points, args.base, args.lamb)
-    # ans = 
-    plot_figure(data_points, ans)
-    print (ans)
+    plot_figure(data_points, ans, 'LSE')
+    
 

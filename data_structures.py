@@ -73,7 +73,7 @@ class Matrix():
 
 class Polynomial():
     '''
-    coefs example: 5x^4 + 2x^2 - x^1 + 8 => [(4, 5), (2, 2), (1, -1), (0, 8) (degree, coef)]
+    coefs example: 5x^4 + 2x^2 - x^1 + 8 => [(4, 5), (2, 2), (1, -1), (0, 8)... (degree, coef)]
     '''
     def __init__(self, poly):
         self.polynomial = poly
