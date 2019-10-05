@@ -1,4 +1,6 @@
 import argparse
+import random
+
 import matplotlib.pyplot as plot
 import numpy as np
 
@@ -14,6 +16,7 @@ def read_testcase(sample_in):
         data_points.append(data_array)
     
     return data_points
+
 
 def plot_figure(data_points, solution, method):
     data_x, data_y = list(), list()
@@ -34,11 +37,20 @@ def plot_figure(data_points, solution, method):
     plot.plot(sample_x, sample_y)
     plot.savefig(f'{method}_plot.png')
 
+    error = 0
+    for sample_x, sample_y in zip(data_x, data_y):
+        y = sol(sample_x)
+        error += abs(y - sample_y)**2
+    
+
+    print (f'{method}:')
+    print (f'Fitting line: {sol.show()}')
+    print (f'Total error: {error}\n')
+
     return
 
 
-def lse(data_points, base, lamb):
-    # print (f'Processing LSE with data points: {data_points} and lambda {lamb}')
+def extract_paras(data_points, base):
     A = list()
     b = list()
     for x, y in data_points:
@@ -50,6 +62,13 @@ def lse(data_points, base, lamb):
 
     b = Matrix(b)
     A = Matrix(A)
+
+    return A, b
+
+
+def lse(data_points, base, lamb):
+    # print (f'Processing LSE with data points: {data_points} and lambda {lamb}')
+    A, b = extract_paras(data_points, base)
     identity = Matrix.make_identity(A.cols, lamb)
     A_reverse = A.reverse()
     
@@ -57,6 +76,19 @@ def lse(data_points, base, lamb):
     A = Matrix.inverse(A)
 
     return A.mul(A_reverse).mul(b).data
+
+
+def newtons_method(data_points, base, iteration):
+    A, b = extract_paras(data_points, base)
+    x = Matrix([[random.randint(1, 100)], [random.randint(1, 100)]])
+
+    for i in range(iteration):
+        gradient = A.reverse().mul(A).mul(x).mul_const(2).sub(A.reverse().mul(b).mul_const(2))
+        hessian = A.reverse().mul(A).mul_const(2)
+        x = x.sub(Matrix.inverse(hessian).mul(gradient))
+
+    return x.data
+
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -74,4 +106,6 @@ if __name__ == "__main__":
     ans = lse(data_points, args.base, args.lamb)
     plot_figure(data_points, ans, 'LSE')
     
+    ans = newtons_method(data_points, args.base, 5)
+    plot_figure(data_points, ans, "Newton's Method")
 

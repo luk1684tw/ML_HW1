@@ -13,6 +13,14 @@ class Matrix():
 
         return Matrix(ans)
 
+    def sub(self, data):
+        ans = list()
+        operand = data.data
+        for i in range(self.rows):
+            ans.append([a - b for a, b in zip(self.data[i], operand[i])])
+        
+        return Matrix(ans)
+
     def mul(self, data):
         operand = data.reverse().data
         ans = list()
@@ -21,6 +29,13 @@ class Matrix():
             for j in range(data.cols):
                 cur_row.append(sum([a*b for a, b in zip(self.data[i], operand[j])]))
             ans.append(cur_row)
+
+        return Matrix(ans)
+
+    def mul_const(self, multiple):
+        ans = list()
+        for i in range(self.rows):
+            ans.append([j*multiple for j in self.data[i]])
 
         return Matrix(ans)
 
@@ -84,3 +99,10 @@ class Polynomial():
             y += coef * x ** deg
 
         return y
+
+    def show(self):
+        poly = str()
+        for deg, coef in reversed(self.polynomial[1:]):
+            poly += f"{coef}X^{deg} + "
+        poly += str(self.polynomial[0][1])
+        return poly
